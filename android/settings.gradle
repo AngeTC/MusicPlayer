@@ -1,0 +1,5 @@
+rootProject.name = 'MusicPlayer'
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')
+
+include ':app'
