@@ -16,15 +16,7 @@ import {
     FlatList,
 } from 'react-native';
 import AudioFileDetailsModule from './modules/AudioFileDetailsModule';
-import ToastModule from './modules/ToastModule';
 import ListItem from './templates/ListItem';
-
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-    android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
 export default class App extends Component<{}> {
     static navigationOptions = {
@@ -43,30 +35,6 @@ export default class App extends Component<{}> {
             this.setState({artists: result});
             console.log(this.state.artists);
         });
-    }
-
-    // UNUSED
-    _createToastMessage() {
-        RNFS.readDir('/sdcard/music')
-        .then(async (result) => {
-            var totalFiles = 0;
-            for (var i = 0; i < result.length; i++) {
-                if (result[i].isFile()) {
-                    console.log(await AudioFileDetailsModule.retrieveAudioFileDetails(result[i].path));
-                    totalFiles++;
-                }
-            }
-            ToastModule.show('Files found: ' + totalFiles, ToastModule.SHORT);
-        })
-        .catch((err) => {
-            console.log(err.message, err.code);
-            ToastModule.show('readDir failed. ' + err.message, ToastModule.SHORT);
-        });
-    }
-
-    // UNUSED
-    async _getAllAlbums() {
-        return await AudioFileDetailsModule.getAllAlbums();
     }
 
     async _getAllArtists() {
