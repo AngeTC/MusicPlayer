@@ -33,20 +33,24 @@ export default class App extends Component<{}> {
     async componentWillMount() {
         await this._getAllArtists().then((result) => {
             this.setState({artists: result});
-            console.log(this.state.artists);
         });
     }
 
-    async _getAllArtists() {
-        var result = await AudioFileDetailsModule.getAllArtists();
-        var artists = [];
-        for (key in result) {
-            if (result.hasOwnProperty(key)) {
-                artists.push(result[key]);
-            }
+    render() {
+        if (this.state.artists.length == 0) {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.loadingtext}>Loading...</Text>
+                </View>
+            );
         }
-
-        return artists;
+        return (
+            <FlatList
+            data={this.state.artists}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            />
+        );
     }
 
     _keyExtractor = (item, index) => index;
@@ -60,22 +64,33 @@ export default class App extends Component<{}> {
     );
 
     _onPressItem = (index) => {
-        console.log("Pressed row: "+index);
+        const { navigate } = this.props.navigation;
+        navigate('ArtistPage', {artist: this.state.artists[index]});
     };
 
-    render() {
-        if (this.state.artists.length == 0) {
-            return (
-                <Text style={styles.description}>Loading...</Text>
-            );
+    async _getAllArtists() {
+        var result = await AudioFileDetailsModule.getAllArtists();
+        var artists = [];
+        for (key in result) {
+            if (result.hasOwnProperty(key)) {
+                artists.push(result[key]);
+            }
         }
-        return (
-            <FlatList
-            data={this.state.artists}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderItem}
-            />
-        );
+
+        artists.sort(function(a, b) {
+            var nameA = a.ARTIST.toUpperCase().replace(/^(THE )/,"");
+            var nameB = b.ARTIST.toUpperCase().replace(/^(THE )/,"");
+
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+            return 0;
+        });
+
+        return artists;
     }
 }
 
@@ -86,12 +101,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
+    loadingtext: {
         textAlign: 'center',
         color: '#333333',
         marginBottom: 5,

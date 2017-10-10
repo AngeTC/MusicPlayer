@@ -23,7 +23,8 @@ export default class ListItem extends React.PureComponent {
                 <View>
                     <View style={styles.rowContainer}>
                         <View style={styles.textContainer}>
-                            <Text style={styles.title}>{item.ARTIST}</Text>
+                            <Text style={styles.artist}>{item.ARTIST}</Text>
+                            <Text style={styles.subtext}>{item.NUMBER_OF_TRACKS} Tracks {item.NUMBER_OF_ALBUMS} Albums</Text>
                         </View>
                     </View>
                     <View style={styles.separator}/>
@@ -34,11 +35,6 @@ export default class ListItem extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-    thumb: {
-        width: 80,
-        height: 80,
-        marginRight: 10
-    },
     textContainer: {
         flex: 1
     },
@@ -46,13 +42,12 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: '#dddddd'
     },
-    price: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: '#48BBEC'
+    artist: {
+        fontSize: 18,
+        color: '#656565'
     },
-    title: {
-        fontSize: 20,
+    subtext: {
+        fontSize: 14,
         color: '#656565'
     },
     rowContainer: {

@@ -72,10 +72,41 @@ public class AudioFileDetailsModule extends ReactContextBaseJavaModule {
 
                 WritableMap artistMap = Arguments.createMap();
 
-                artistMap.putString("ARTIST", artist);
+                artistMap.putString("ID", id);
                 artistMap.putString("NUMBER_OF_TRACKS", numOfTracks);
                 artistMap.putString("NUMBER_OF_ALBUMS", numOfAlbums);
+                artistMap.putString("ARTIST", artist);
                 map.putMap(id, artistMap);
+            }
+        }
+        cursor.close();
+
+        promise.resolve(map);
+    }
+
+    @ReactMethod
+    private void getAlbumsForArtist(String artistId, Promise promise) {
+        ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
+        WritableMap map = Arguments.createMap();
+
+        Uri uri = MediaStore.Audio.Artists.Albums.getContentUri("external", Long.parseLong(artistId));
+        Cursor cursor = contentResolver.query(uri, null, null, null, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String albumName  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM));
+                String albumId  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists._ID));
+                String albumArt  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ART));
+//                Long albumid = Long.parseLong(album_id);
+//                Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+//                Uri finaluri = ContentUris.withAppendedId(sArtworkUri, albumid);
+
+                WritableMap albumMap = Arguments.createMap();
+
+                albumMap.putString("ALBUM_ID", albumId);
+                albumMap.putString("ALBUM", albumName);
+                albumMap.putString("ALBUM_ART", albumArt);
+                map.putMap(albumId, albumMap);
             }
         }
         cursor.close();
