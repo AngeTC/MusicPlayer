@@ -48,7 +48,8 @@ export default class AlbumListItem extends React.PureComponent {
 
 const styles = StyleSheet.create({
     textContainer: {
-        flex: 1
+        flex: 1,
+        justifyContent: 'center',
     },
     separator: {
         height: 1,
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
     },
     album: {
         fontSize: 18,
-        color: '#656565'
+        color: '#656565',
+        paddingLeft: 10,
     },
     subtext: {
         fontSize: 14,
