@@ -7,8 +7,10 @@ import {
     View,
     TouchableHighlight,
     Text,
+    FlatList,
 } from 'react-native';
 import AudioFileDetailsModule from '../modules/AudioFileDetailsModule';
+import AlbumListItem from './AlbumListItem';
 
 export default class ArtistPage extends React.PureComponent {
     static navigationOptions = ({ navigation }) => ({
@@ -36,30 +38,28 @@ export default class ArtistPage extends React.PureComponent {
                 </View>
             );
         }
-        console.log(this.state.albums);
         return (
-            <Text style={styles.loadingtext}>Albums Loaded.</Text>
-            // <FlatList
-            // data={this.state.albums}
-            // keyExtractor={this._keyExtractor}
-            // renderItem={this._renderItem}
-            // />
+            <FlatList
+            data={this.state.albums}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            />
         );
     }
 
-    // _keyExtractor = (item, index) => index;
-    //
-    // _renderItem = ({item, index}) => (
-    //     <ListItem
-    //     item={item}
-    //     index={index}
-    //     onPressItem={this._onPressItem}
-    //     />
-    // );
-    //
-    // _onPressItem = (index) => {
-    //     console.log("Test");
-    // };
+    _keyExtractor = (item, index) => index;
+
+    _renderItem = ({item, index}) => (
+        <AlbumListItem
+        item={item}
+        index={index}
+        onPressItem={this._onPressItem}
+        />
+    );
+
+    _onPressItem = (index) => {
+        console.log("Album selected: " + this.state.albums[index].ALBUM);
+    };
 
     async _getAlbumsForArtist() {
         const { params } = this.props.navigation.state;

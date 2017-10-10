@@ -9,22 +9,34 @@ import {
     Text,
 } from 'react-native';
 
-export default class ListItem extends React.PureComponent {
+export default class AlbumListItem extends React.PureComponent {
     _onPress = () => {
         this.props.onPressItem(this.props.index);
     }
 
     render() {
         const item = this.props.item;
+        // var imageURI;
+        // if (item.ALBUM_ART != null) {
+        //     imageURI = item.ALBUM_ART;
+        // } else {
+        //     imageURI = defaultImage;
+        // }
+
+        var albumImage = require("../images/default-album.png");
+        if (item.ALBUM_ART != null) {
+            albumImage = {uri: item.ALBUM_ART}
+        }
+
         return (
             <TouchableHighlight
             onPress={this._onPress}
             underlayColor='#dddddd'>
                 <View>
                     <View style={styles.rowContainer}>
+                        <Image style={{width: 50, height: 50}} source={albumImage} />
                         <View style={styles.textContainer}>
-                            <Text style={styles.artist}>{item.ARTIST}</Text>
-                            <Text style={styles.subtext}>{item.NUMBER_OF_TRACKS} Tracks {item.NUMBER_OF_ALBUMS} Albums</Text>
+                            <Text style={styles.album}>{item.ALBUM}</Text>
                         </View>
                     </View>
                     <View style={styles.separator}/>
@@ -42,7 +54,7 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: '#dddddd'
     },
-    artist: {
+    album: {
         fontSize: 18,
         color: '#656565'
     },

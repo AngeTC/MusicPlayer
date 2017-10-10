@@ -16,7 +16,7 @@ import {
     FlatList,
 } from 'react-native';
 import AudioFileDetailsModule from './modules/AudioFileDetailsModule';
-import ListItem from './templates/ListItem';
+import ArtistListItem from './templates/ArtistListItem';
 
 export default class App extends Component<{}> {
     static navigationOptions = {
@@ -56,7 +56,7 @@ export default class App extends Component<{}> {
     _keyExtractor = (item, index) => index;
 
     _renderItem = ({item, index}) => (
-        <ListItem
+        <ArtistListItem
         item={item}
         index={index}
         onPressItem={this._onPressItem}

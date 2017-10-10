@@ -94,12 +94,15 @@ public class AudioFileDetailsModule extends ReactContextBaseJavaModule {
 
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                String albumName  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM));
-                String albumId  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists._ID));
-                String albumArt  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ART));
-//                Long albumid = Long.parseLong(album_id);
-//                Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-//                Uri finaluri = ContentUris.withAppendedId(sArtworkUri, albumid);
+                String albumName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM));
+                String albumId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists._ID));
+                String albumArt = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ART));
+                if (albumArt != null) {
+                    Long albumid = Long.parseLong(albumId);
+                    Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+                    Uri finalAlbumUri = ContentUris.withAppendedId(sArtworkUri, albumid);
+                    albumArt = finalAlbumUri.toString();
+                }
 
                 WritableMap albumMap = Arguments.createMap();
 
