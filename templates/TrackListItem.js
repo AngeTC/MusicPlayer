@@ -9,17 +9,25 @@ import {
     Text,
 } from 'react-native';
 
-export default class AlbumListItem extends React.PureComponent {
+export default class TrackListItem extends React.PureComponent {
     _onPress = () => {
         this.props.onPressItem(this.props.index);
     }
 
+    _formatDuration(millis) {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        return (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+    }
+
     render() {
         const item = this.props.item;
+        const album = this.props.album;
 
         var albumImage = require("../images/default-album.png");
-        if (item.ALBUM_ART != null) {
-            albumImage = {uri: item.ALBUM_ART}
+        if (album.ALBUM_ART != null) {
+            albumImage = {uri: album.ALBUM_ART}
         }
 
         return (
@@ -30,7 +38,11 @@ export default class AlbumListItem extends React.PureComponent {
                     <View style={styles.rowContainer}>
                         <Image style={{width: 50, height: 50}} source={albumImage} />
                         <View style={styles.textContainer}>
-                            <Text style={styles.album}>{item.ALBUM}</Text>
+                            <Text style={styles.track}>{item.TITLE}</Text>
+                            <Text style={styles.subtext}>{item.ARTIST}</Text>
+                        </View>
+                        <View style={styles.durationContainer}>
+                            <Text style={styles.duration}>{this._formatDuration(item.DURATION)}</Text>
                         </View>
                     </View>
                     <View style={styles.separator}/>
@@ -42,21 +54,32 @@ export default class AlbumListItem extends React.PureComponent {
 
 const styles = StyleSheet.create({
     textContainer: {
+        flex: 4,
+        justifyContent: 'center',
+    },
+    durationContainer: {
         flex: 1,
         justifyContent: 'center',
+        alignContent: 'flex-end'
     },
     separator: {
         height: 1,
         backgroundColor: '#dddddd'
     },
-    album: {
-        fontSize: 18,
+    track: {
+        fontSize: 15,
         color: '#656565',
-        paddingLeft: 10,
+        paddingLeft: 10
     },
     subtext: {
+        fontSize: 12,
+        color: '#656565',
+        paddingLeft: 10
+    },
+    duration: {
         fontSize: 14,
-        color: '#656565'
+        color: '#656565',
+        alignSelf: 'flex-end'
     },
     rowContainer: {
         flexDirection: 'row',

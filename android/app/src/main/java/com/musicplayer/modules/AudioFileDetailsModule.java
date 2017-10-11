@@ -118,6 +118,42 @@ public class AudioFileDetailsModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    private void getTracksForAlbum(String albumId, Promise promise) {
+        ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
+        WritableMap map = Arguments.createMap();
+
+        Uri uri = MediaStore.Audio.Media.getContentUri("external");
+        String selection = MediaStore.Audio.Media.ALBUM_ID + "=?";
+        String[] selectionVal = {albumId};
+        String order = MediaStore.Audio.Media.TRACK + " ASC";
+        Cursor cursor = contentResolver.query(uri, null, selection, selectionVal, order);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String trackName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                String trackPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
+                String trackDuration  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                String trackArtist  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                String trackAlbum  = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+
+                WritableMap trackMap = Arguments.createMap();
+
+                trackMap.putString("TITLE", trackName);
+                trackMap.putString("PATH", trackPath);
+                trackMap.putString("TRACK_NUMBER", trackNumber);
+                trackMap.putString("DURATION", trackDuration);
+                trackMap.putString("ARTIST", trackArtist);
+                trackMap.putString("ALBUM", trackAlbum);
+                map.putMap(trackNumber, trackMap);
+            }
+        }
+        cursor.close();
+
+        promise.resolve(map);
+    }
+
+    @ReactMethod
     private void getAllAlbums(Promise promise) {
         ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
         WritableMap map = Arguments.createMap();

@@ -10,28 +10,28 @@ import {
     FlatList,
 } from 'react-native';
 import AudioFileDetailsModule from '../modules/AudioFileDetailsModule';
-import AlbumListItem from './AlbumListItem';
+import TrackListItem from './TrackListItem';
 
-export default class ArtistPage extends React.PureComponent {
+export default class AlbumPage extends React.PureComponent {
     static navigationOptions = ({ navigation }) => ({
-        title: navigation.state.params.artist.ARTIST,
+        title: navigation.state.params.album.ALBUM,
     });
 
     constructor(props) {
         super(props);
         this.state = {
-            albums: []
+            tracks: []
         };
     }
 
     async componentWillMount() {
-        await this._getAlbumsForArtist().then((result) => {
-            this.setState({albums: result});
+        await this._getTracksForAlbum().then((result) => {
+            this.setState({tracks: result});
         });
     }
 
     render() {
-        if (this.state.albums.length == 0) {
+        if (this.state.tracks.length == 0) {
             return (
                 <View style={styles.container}>
                     <Text style={styles.loadingtext}>Loading...</Text>
@@ -40,7 +40,7 @@ export default class ArtistPage extends React.PureComponent {
         }
         return (
             <FlatList
-            data={this.state.albums}
+            data={this.state.tracks}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
             />
@@ -50,43 +50,42 @@ export default class ArtistPage extends React.PureComponent {
     _keyExtractor = (item, index) => index;
 
     _renderItem = ({item, index}) => (
-        <AlbumListItem
+        <TrackListItem
         item={item}
+        album={this.props.navigation.state.params.album}
         index={index}
         onPressItem={this._onPressItem}
         />
     );
 
     _onPressItem = (index) => {
-        console.log("Album selected: " + this.state.albums[index].ALBUM);
-        const { navigate } = this.props.navigation;
-        navigate('AlbumPage', {album: this.state.albums[index]});
+        console.log(this.state.tracks[index]);
     };
 
-    async _getAlbumsForArtist() {
+    async _getTracksForAlbum() {
         const { params } = this.props.navigation.state;
-        var result = await AudioFileDetailsModule.getAlbumsForArtist(params.artist.ID);
-        var albums = [];
+        var result = await AudioFileDetailsModule.getTracksForAlbum(params.album.ALBUM_ID);
+        var tracks = [];
         for (key in result) {
             if (result.hasOwnProperty(key)) {
-                albums.push(result[key]);
+                tracks.push(result[key]);
             }
         }
 
-        albums.sort(function(a, b) {
-            var nameA = a.ALBUM.toUpperCase().replace(/^(THE )/,"");
-            var nameB = b.ALBUM.toUpperCase().replace(/^(THE )/,"");
+        tracks.sort(function(a, b) {
+            var trackA = parseFloat(a.TRACK_NUMBER);
+            var trackB = parseFloat(b.TRACK_NUMBER);
 
-            if (nameA < nameB) {
+            if (trackA < trackB) {
                 return -1;
             }
-            if (nameA > nameB) {
+            if (trackA > trackB) {
                 return 1;
             }
             return 0;
         });
 
-        return albums;
+        return tracks;
     }
 }
 
