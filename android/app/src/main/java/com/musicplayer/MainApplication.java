@@ -3,6 +3,7 @@ package com.musicplayer;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.brentvatne.react.ReactVideoPackage;
 import com.rnfs.RNFSPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,7 +25,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(), new RNFSPackage(),
+          new MainReactPackage(),
+            new ReactVideoPackage(), new RNFSPackage(),
           new MusicPlayerReactPackage()
       );
     }

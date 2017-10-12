@@ -60,6 +60,8 @@ export default class AlbumPage extends React.PureComponent {
 
     _onPressItem = (index) => {
         console.log(this.state.tracks[index]);
+        const { navigate } = this.props.navigation;
+        navigate('TrackPage', {track: this.state.tracks[index]});
     };
 
     async _getTracksForAlbum() {
